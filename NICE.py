@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from networks import *
 from utils import *
 from glob import glob
-# import torch.utils.tensorboard as tensorboardX
+import torch.utils.tensorboard as tensorboardX
 from thop import profile
 from thop import clever_format
 
@@ -145,7 +145,7 @@ class NICE(object) :
 
 
     def train(self):
-        # writer = tensorboardX.SummaryWriter(os.path.join(self.result_dir, self.dataset, 'summaries/Allothers'))
+        writer = tensorboardX.SummaryWriter(os.path.join(self.result_dir, self.dataset, 'summaries/Allothers'))
         self.gen2B.train(), self.gen2A.train(), self.disA.train(), self.disB.train()
 
         self.start_iter = 1
@@ -232,8 +232,8 @@ class NICE(object) :
             Discriminator_loss = D_loss_A + D_loss_B
             Discriminator_loss.backward()
             self.D_optim.step()
-            # writer.add_scalar('D/%s' % 'loss_A', D_loss_A.data.cpu().numpy(), global_step=step)  
-            # writer.add_scalar('D/%s' % 'loss_B', D_loss_B.data.cpu().numpy(), global_step=step)  
+            writer.add_scalar('D/%s' % 'loss_A', D_loss_A.data.cpu().numpy(), global_step=step)  
+            writer.add_scalar('D/%s' % 'loss_B', D_loss_B.data.cpu().numpy(), global_step=step)  
 
             # Update G
             self.G_optim.zero_grad()
@@ -275,8 +275,8 @@ class NICE(object) :
             Generator_loss = G_loss_A + G_loss_B
             Generator_loss.backward()
             self.G_optim.step()
-            # writer.add_scalar('G/%s' % 'loss_A', G_loss_A.data.cpu().numpy(), global_step=step)  
-            # writer.add_scalar('G/%s' % 'loss_B', G_loss_B.data.cpu().numpy(), global_step=step)  
+            writer.add_scalar('G/%s' % 'loss_A', G_loss_A.data.cpu().numpy(), global_step=step)  
+            writer.add_scalar('G/%s' % 'loss_B', G_loss_B.data.cpu().numpy(), global_step=step)  
 
             print("[%5d/%5d] time: %4.4f d_loss: %.8f, g_loss: %.8f" % (step, self.iteration, time.time() - start_time, Discriminator_loss, Generator_loss))
 
